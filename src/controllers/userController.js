@@ -10,7 +10,7 @@ const findProducts = async (req, res) => {
         const products = await Product.find()
         if(products !== null){
 
-            let response = await axios.post('https://vendors-jpnc.onrender.com/users/products', {
+            let response = await axios.post('https://vendors-j37j.onrender.com/users/products', {
                 products: products
             })
 
@@ -43,7 +43,7 @@ const findProductWithSlug = async (req, res) => {
             slug = escapeRegexp(slug);
 
             // send request to vendor app to get vendors that imported this product 
-            let response = await axios.post('https://vendors-jpnc.onrender.com/users/productsid', {
+            let response = await axios.post('https://vendors-j37j.onrender.com/users/productsid', {
                 id: getId._id
             })
 
@@ -104,7 +104,7 @@ const topproducts = async (req, res) => {
         const products = await Product.find().sort({ countperimport: -1 }).limit(8)
         
         if(products !== null){
-            let response = await axios.post('https://vendors-jpnc.onrender.com/users/topproducts', {
+            let response = await axios.post('https://vendors-j37j.onrender.com/users/topproducts', {
                 products: products
             })
            

@@ -164,7 +164,7 @@ const viewProduct = async (req, res) => {
         let products = await Product.find().sort({ createdAt: -1 })
         if(products !== null){
 
-            let response = await axios.post('https://vendors-jpnc.onrender.com/users/products', {
+            let response = await axios.post('https://vendors-j37j.onrender.com/users/products', {
                 products: products
             })
 
