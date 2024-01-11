@@ -1,6 +1,7 @@
 const Product = require('../models/product')
 const Video = require('../models/advideo')
 const Affiliate = require('../models/affiliate')
+const Hero = require('../models/hero')
 const cloudinary = require('../middlewares/cloudinary')
 const streamifier = require('streamifier')
 const axios = require('axios')
@@ -114,6 +115,57 @@ const createAffiliate = async (req, res) => {
         res.json({ message: 'error processing request' })
     }
 }
+
+
+
+
+// add title for hero
+const insertHero = async (req, res) => {
+    try{
+        if(req.body.admin_email != req.admin.email){
+            return res.json({ message: 'invalid or expired token' })
+        }
+        
+        let info = {
+            title: req.body.title,
+        }
+
+        const hero = await new Hero(info).save()
+        if(hero !== null){
+            res.json({ message: 'hero title uploaded' })
+        }else{
+            res.json({ message: 'error uploading hero title' })
+        }
+        
+    }catch (error) {
+        console.log(error)
+        res.json({ message: 'error processing request' })
+    }
+}
+
+
+
+
+
+// fetch hero title
+const getHero = async (req, res) => {
+    try{
+
+        let response = await Hero.find().sort({ createdAt: -1 }).limit(1)
+        if(response !== null){
+            res.json({ title: response })
+        }
+        else {
+            res.json({ message: 'error handling request' })
+        } 
+
+    }catch (error) {
+        console.log(error)
+        res.json({ message: 'error processing request' })
+    }
+}
+
+
 
 
 
@@ -360,4 +412,6 @@ module.exports = {
     deleteAff,
     deleteVideo,
     deleteProduct,
+    insertHero,
+    getHero
 }

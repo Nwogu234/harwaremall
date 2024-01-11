@@ -11,6 +11,7 @@ router.post('/addvideo', auth, productcontroller.createVideo)
 router.post('/addaffiliate', auth, productcontroller.createAffiliate)
 router.post('/edit', auth, upload.single("img"), productcontroller.editProduct)
 router.post('/delete', auth, productcontroller.deleteProduct)
+router.post('/inserthero', auth, productcontroller.insertHero)
 
 
 router.post('/deleteaff', auth, productcontroller.deleteAff)
@@ -22,6 +23,7 @@ router.post('/deletevideo', auth, productcontroller.deleteVideo)
 router.get('/getaffiliate', productcontroller.viewAffiliate)
 router.get('/getvideo', productcontroller.viewVideo)
 router.get('/getproducts', productcontroller.viewProduct)
+router.get('/gethero', productcontroller.getHero)
 
 
 module.exports = router
