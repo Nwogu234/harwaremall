@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors')
+const bodyParser = require('body-parser')
 const basicRoutes = require('./routes/basicRoutes')
 const productRoutes = require('./routes/productRoutes')
 const vendorRoutes = require('./routes/vendorRoutes')
@@ -18,6 +19,8 @@ module.exports = async (app) => {
     app.use(express.static('public'))
     
     app.use(cors())
+    
+    app.use(bodyParser.json({ limit: '20mb' }));
 
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))    

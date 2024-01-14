@@ -3,6 +3,7 @@ const Video = require('../models/advideo')
 const Affiliate = require('../models/affiliate')
 const axios = require('axios')
 const escapeRegexp = require("escape-string-regexp-node");
+const zlib = require('zlib')
 
 // send all uploaded product
 const findProducts = async (req, res) => {
@@ -13,8 +14,9 @@ const findProducts = async (req, res) => {
             let response = await axios.post('https://vendors-j37j.onrender.com/users/products', {
                 products: products
             })
-
-            res.json({ message: response.data.foundproducts })
+            
+            const compressedData = zlib.gzipSync(response.data.foundproducts);
+            res.json({ message: compressedData })
         }else{
             res.json({ message: 'no product found' })
         }
