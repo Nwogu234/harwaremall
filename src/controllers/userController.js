@@ -3,7 +3,7 @@ const Video = require('../models/advideo')
 const Affiliate = require('../models/affiliate')
 const axios = require('axios')
 const escapeRegexp = require("escape-string-regexp-node");
-const zlib = require('zlib')
+const { compressSent, decompressSent } = require('../middlewares/compressdata')
 
 // send all uploaded product
 const findProducts = async (req, res) => {
@@ -11,13 +11,8 @@ const findProducts = async (req, res) => {
         const products = await Product.find()
         if(products !== null){
 
-            const productsString = JSON.stringify(products);
-            
-            // Convert the JSON string to a Buffer
-            const productsBuffer = Buffer.from(productsString);
-
             // Compress the data
-            const compressedProducts = zlib.gzipSync(productsBuffer);
+            const compressedProducts = await compressSent(products);
 
             let response = await axios.post('https://vendors-j37j.onrender.com/users/products', {
                 products: compressedProducts.toString('base64')
@@ -91,10 +86,16 @@ const findProductWithSlug = async (req, res) => {
                 similarVideos: similarVideos
             }
 
-            res.json({ data: sendData })
+            // Compress the data
+            const compressedData = await compressSent(sendData)
+
+            res.json({ data: compressedData })
         }else{
             let sendData = { }
-            res.json({ data: sendData })
+             // Compress the data
+             const compressedData = await compressSent(sendData)
+
+             res.json({ data: compressedData })
         }
 
 
