@@ -11,12 +11,13 @@ const findProducts = async (req, res) => {
         const products = await Product.find()
         if(products !== null){
 
+            const compressedProducts = zlib.gzipSync(products);
+
             let response = await axios.post('https://vendors-j37j.onrender.com/users/products', {
-                products: products
+                products: compressedProducts
             })
             
-            const compressedData = zlib.gzipSync(response.data.foundproducts);
-            res.json({ message: compressedData })
+            res.json({ message: response.data.foundproducts })
         }else{
             res.json({ message: 'no product found' })
         }
