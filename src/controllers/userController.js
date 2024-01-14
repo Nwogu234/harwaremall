@@ -11,10 +11,16 @@ const findProducts = async (req, res) => {
         const products = await Product.find()
         if(products !== null){
 
-            const compressedProducts = zlib.gzipSync(products);
+            const productsString = JSON.stringify(products);
+            
+            // Convert the JSON string to a Buffer
+            const productsBuffer = Buffer.from(productsString);
+
+            // Compress the data
+            const compressedProducts = zlib.gzipSync(productsBuffer);
 
             let response = await axios.post('https://vendors-j37j.onrender.com/users/products', {
-                products: compressedProducts
+                products: compressedProducts.toString('base64')
             })
             
             res.json({ message: response.data.foundproducts })
