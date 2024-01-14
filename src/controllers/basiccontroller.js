@@ -106,7 +106,7 @@ const adminForgot = async (req, res) => {
                         button: {
                             color: '#22BC66',
                             text: 'Recover Password',
-                            link: 'https://www.hardwaremall.com/passwordreset?email='+email
+                            link: 'https://www.hardwaremall.io/passwordreset?email='+email
                         }
                     },
                     

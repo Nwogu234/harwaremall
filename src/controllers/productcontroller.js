@@ -5,6 +5,7 @@ const Hero = require('../models/hero')
 const cloudinary = require('../middlewares/cloudinary')
 const streamifier = require('streamifier')
 const axios = require('axios')
+const { compressSent, decompressSent } = require('../middlewares/compressdata')
 
 
 // upload products
@@ -175,7 +176,9 @@ const viewAffiliate = async (req, res) => {
 
         let response = await Affiliate.find().sort({ createdAt: -1 })
         if(response !== null){
-            res.json({ affiliate: response })
+            // Compress the data
+            const compressedData = await compressSent(response);
+            res.json({ affiliate: compressedData })
         }
         else {
             res.json({ message: 'error handling request' })
@@ -195,7 +198,9 @@ const viewVideo = async (req, res) => {
 
         let response = await Video.find().sort({ createdAt: -1 })
         if(response !== null){
-            res.json({ video: response })
+            // Compress the data
+            const compressedData = await compressSent(response);
+            res.json({ video: compressedData })
         }
         else {
             res.json({ message: 'error handling request' })
@@ -216,8 +221,11 @@ const viewProduct = async (req, res) => {
         let products = await Product.find().sort({ createdAt: -1 })
         if(products !== null){
 
+            // Compress the data
+            const compressedProducts = await compressSent(products);
+
             let response = await axios.post('https://vendors-j37j.onrender.com/users/products', {
-                products: products
+                products: compressedProducts.toString('base64')
             })
 
             res.json({ message: response.data.foundproducts })

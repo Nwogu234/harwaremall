@@ -1,5 +1,6 @@
 const axios = require('axios')
 const Product = require('../models/product')
+const { compressSent, decompressSent } = require('../middlewares/compressdata')
 
 // block vendor account
 const editVendor = async (req, res) => {
@@ -31,7 +32,7 @@ const editVendor = async (req, res) => {
 
 const getProducts = async (req, res) => {
     try{
-        let productGotten = req.body.products
+        let productGotten = await decompressSent(req.body.products)
         let foundProducts = []
 
         let products = await Product.find({})
@@ -50,9 +51,12 @@ const getProducts = async (req, res) => {
                 }
             })
             
-            res.json({ foundProducts: foundProducts })
+            // Compress the data
+            const compressedData = await compressSent(foundProducts)
+            res.json({ foundProducts: compressedData })
         }else{
-            res.json({ foundProducts: foundProducts })
+            const compressedData = await compressSent(foundProducts)
+            res.json({ foundProducts: compressedData })
         }
 
 

@@ -114,8 +114,10 @@ const topproducts = async (req, res) => {
         const products = await Product.find().sort({ countperimport: -1 }).limit(8)
         
         if(products !== null){
+            const compressedProducts = await compressSent(products);
+
             let response = await axios.post('https://vendors-j37j.onrender.com/users/topproducts', {
-                products: products
+                products: compressedProducts.toString('base64')
             })
            
             res.json({ message: response.data.foundproducts })
@@ -136,9 +138,14 @@ const findVideo = async (req, res) => {
     try{
         const videos = await Video.find().sort({ createdAt: -1 })
         if(videos !== null){
-            res.json({ foundvideos: videos })
+            // Compress the data
+            const compressedData = await compressSent(videos)
+
+            res.json({ foundvideos: compressedData })
         }else{
-            res.json({ foundvideos: videos })
+            const compressedData = await compressSent(videos)
+
+            res.json({ foundvideos: compressedData })
         }
 
     }catch (error) {
@@ -152,7 +159,8 @@ const findVideo = async (req, res) => {
 // get and send all vendor imported products back to vendor route for users to access
 const vendorProducts = async (req, res) => {
     try{
-        let productData = req.body.data
+        // decompress data
+        let productData = await decompressSent(req.body.data);
         let productDetails = []
         
         const products = await Product.find()
@@ -165,7 +173,9 @@ const vendorProducts = async (req, res) => {
             }
         });
 
-        res.json({ foundproducts: productDetails })
+        // Compress the data
+        const compressedData = await compressSent(productDetails)
+        res.json({ foundproducts: compressedData })
         
     }catch (error) {
         console.log(error)
