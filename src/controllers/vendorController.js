@@ -29,7 +29,7 @@ const editVendor = async (req, res) => {
 
 
 
-
+// send products imported by vendor back to vendor productcontroller
 const getProducts = async (req, res) => {
     try{
         let productGotten = await decompressSent(req.body.products)
