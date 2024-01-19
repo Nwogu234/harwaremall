@@ -1,7 +1,7 @@
 const zlib = require('zlib')
 
 async function compressSent (data){
-    let data = JSON.stringify(data); 
+    data = JSON.stringify(data); 
     // Convert the JSON string to a Buffer
     data = Buffer.from(data);
     // Compress the data
@@ -12,7 +12,7 @@ async function compressSent (data){
 
 async function decompressSent (data){
     // Decode base64 string to Buffer
-    let data = Buffer.from(data, 'base64');
+    data = Buffer.from(data, 'base64');
 
     // Decompress the Buffer
     data = zlib.gunzipSync(data);
