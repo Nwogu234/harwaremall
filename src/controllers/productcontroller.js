@@ -1,6 +1,7 @@
 const Product = require('../models/product')
 const Video = require('../models/advideo')
 const Affiliate = require('../models/affiliate')
+const Brand = require('../models/brand')
 const Hero = require('../models/hero')
 const cloudinary = require('../middlewares/cloudinary')
 const streamifier = require('streamifier')
@@ -109,6 +110,33 @@ const createAffiliate = async (req, res) => {
             res.json({ message: 'affiliate link uploaded' })
         }else{
             res.json({ message: 'error uploading affiliate link' })
+        }
+        
+    }catch (error) {
+        console.log(error)
+        res.json({ message: 'error processing request' })
+    }
+}
+
+
+
+
+// add brand
+const createBrand = async (req, res) => {
+    try{
+        if(req.body.admin_email != req.admin.email){
+            return res.json({ message: 'invalid or expired token' })
+        }
+        
+        let info = {
+            title: req.body.title
+        }
+
+        const brand = await new Brand(info).save()
+        if(brand !== null){
+            res.json({ message: 'brand uploaded' })
+        }else{
+            res.json({ message: 'error uploading brand link' })
         }
         
     }catch (error) {
@@ -421,5 +449,6 @@ module.exports = {
     deleteVideo,
     deleteProduct,
     insertHero,
-    getHero
+    getHero,
+    createBrand
 }
