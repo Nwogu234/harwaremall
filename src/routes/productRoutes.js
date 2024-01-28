@@ -25,6 +25,7 @@ router.get('/getaffiliate', productcontroller.viewAffiliate)
 router.get('/getvideo', productcontroller.viewVideo)
 router.get('/getproducts', productcontroller.viewProduct)
 router.get('/gethero', productcontroller.getHero)
+router.get('/getbrand', productcontroller.getBrand)
 
 
 module.exports = router

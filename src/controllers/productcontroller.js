@@ -196,6 +196,26 @@ const getHero = async (req, res) => {
 
 
 
+// fetch hero title
+const getBrand = async (req, res) => {
+    try{
+
+        let response = await Brand.find().sort({ createdAt: -1 }).limit(1)
+        if(response !== null){
+            res.json({ title: response })
+        }
+        else {
+            res.json({ message: 'error handling request' })
+        } 
+
+    }catch (error) {
+        console.log(error)
+        res.json({ message: 'error processing request' })
+    }
+}
+
+
+
 
 
 // fetch affiliate
@@ -450,5 +470,6 @@ module.exports = {
     deleteProduct,
     insertHero,
     getHero,
-    createBrand
+    createBrand,
+    getBrand
 }
