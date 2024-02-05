@@ -2,6 +2,7 @@ const Product = require('../models/product')
 const Video = require('../models/advideo')
 const Affiliate = require('../models/affiliate')
 const Brand = require('../models/brand')
+const Category = require('../models/category')
 const Hero = require('../models/hero')
 const cloudinary = require('../middlewares/cloudinary')
 const streamifier = require('streamifier')
@@ -146,6 +147,31 @@ const createBrand = async (req, res) => {
 }
 
 
+// add category
+const createCategory = async (req, res) => {
+    try{
+        if(req.body.admin_email != req.admin.email){
+            return res.json({ message: 'invalid or expired token' })
+        }
+        
+        let info = {
+            title: req.body.title
+        }
+
+        const category = await new Category(info).save()
+        if(category !== null){
+            res.json({ message: 'category uploaded' })
+        }else{
+            res.json({ message: 'error uploading category link' })
+        }
+        
+    }catch (error) {
+        console.log(error)
+        res.json({ message: 'error processing request' })
+    }
+}
+
+
 
 
 // add title for hero
@@ -229,6 +255,49 @@ const viewVideo = async (req, res) => {
             // Compress the data
             const compressedData = await compressSent(response);
             res.json({ video: compressedData })
+        }
+        else {
+            res.json({ message: 'error handling request' })
+        } 
+
+    }catch (error) {
+        console.log(error)
+        res.json({ message: 'error processing request' })
+    }
+}
+
+
+// fetch brand
+const getBrand = async (req, res) => {
+    try{
+
+        let response = await Brand.find().sort({ createdAt: -1 })
+        if(response !== null){
+            // Compress the data
+            const compressedData = await compressSent(response);
+            res.json({ brand: compressedData })
+        }
+        else {
+            res.json({ message: 'error handling request' })
+        } 
+
+    }catch (error) {
+        console.log(error)
+        res.json({ message: 'error processing request' })
+    }
+}
+
+
+
+// fetch video
+const getCategory = async (req, res) => {
+    try{
+
+        let response = await Category.find().sort({ createdAt: -1 })
+        if(response !== null){
+            // Compress the data
+            const compressedData = await compressSent(response);
+            res.json({ category: compressedData })
         }
         else {
             res.json({ message: 'error handling request' })
@@ -450,5 +519,8 @@ module.exports = {
     deleteProduct,
     insertHero,
     getHero,
-    createBrand
+    createBrand,
+    createCategory,
+    getCategory,
+    getBrand
 }
