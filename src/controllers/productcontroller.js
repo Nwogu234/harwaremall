@@ -147,6 +147,7 @@ const createBrand = async (req, res) => {
 }
 
 
+
 // add category
 const createCategory = async (req, res) => {
     try{
@@ -222,6 +223,26 @@ const getHero = async (req, res) => {
 
 
 
+// fetch hero title
+const getBrand = async (req, res) => {
+    try{
+
+        let response = await Brand.find().sort({ createdAt: -1 }).limit(1)
+        if(response !== null){
+            res.json({ title: response })
+        }
+        else {
+            res.json({ message: 'error handling request' })
+        } 
+
+    }catch (error) {
+        console.log(error)
+        res.json({ message: 'error processing request' })
+    }
+}
+
+
+
 
 
 // fetch affiliate
@@ -265,28 +286,6 @@ const viewVideo = async (req, res) => {
         res.json({ message: 'error processing request' })
     }
 }
-
-
-// fetch brand
-const getBrand = async (req, res) => {
-    try{
-
-        let response = await Brand.find().sort({ createdAt: -1 })
-        if(response !== null){
-            // Compress the data
-            const compressedData = await compressSent(response);
-            res.json({ brand: compressedData })
-        }
-        else {
-            res.json({ message: 'error handling request' })
-        } 
-
-    }catch (error) {
-        console.log(error)
-        res.json({ message: 'error processing request' })
-    }
-}
-
 
 
 // fetch video
@@ -521,6 +520,6 @@ module.exports = {
     getHero,
     createBrand,
     createCategory,
-    getCategory,
-    getBrand
+    getBrand,
+    getCategory
 }
