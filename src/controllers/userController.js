@@ -168,7 +168,12 @@ const vendorProducts = async (req, res) => {
         productData.forEach(data => {
             for(let x = 0; x < products.length; x++){
                 if(data.productid == products[x]._id){
-                    productDetails.push(products[x])
+                    found = {
+                        product: products[x],
+                        currency: data.currency,
+                        price: data.price
+                    }
+                    productDetails.push(found)
                 }
             }
         });
