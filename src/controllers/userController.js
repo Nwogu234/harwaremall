@@ -35,16 +35,12 @@ const findProductWithSlug = async (req, res) => {
     try{
 
         // using slug to get id of the product
-        let slug = req.body.slug
+        let id = req.body.id
         
-        let getId = await Product.findOne({ slug: slug })
+        let getId = await Product.findOne({ _id: id })
+        let pname = getId.name
 
         if(getId !== null){
-
-            // using slug without number attached to get 10 similar product
-            slug = slug.split('-')
-            slug = slug.pop()
-            slug = escapeRegexp(slug);
 
             // send request to vendor app to get vendors that imported this product 
             let response = await axios.post('https://vendors-j37j.onrender.com/users/productsid', {
@@ -70,12 +66,12 @@ const findProductWithSlug = async (req, res) => {
 
             // get top 10 similar product
             const similarProducts = await Product.find({
-                name: { $regex: new RegExp(slug, 'i') },
+                name: { $regex: new RegExp(pname, 'i') },
               }).limit(10);
 
             // get 3 similar video
             const similarVideos = await Video.find({
-                title: { $regex: new RegExp(slug, 'i') },
+                title: { $regex: new RegExp(pname, 'i') },
               }).limit(3);
 
             let sendData = {
