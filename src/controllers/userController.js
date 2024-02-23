@@ -8,7 +8,7 @@ const { compressSent, decompressSent } = require('../middlewares/compressdata')
 // send all uploaded product
 const findProducts = async (req, res) => {
     try{
-        const products = await Product.find()
+        const products = await Product.find({}, { name: 1, category: 1, tags: 1, brand: 1 })
         if(products !== null){
 
             // Compress the data
@@ -164,7 +164,7 @@ const vendorProducts = async (req, res) => {
         productData.forEach(data => {
             for(let x = 0; x < products.length; x++){
                 if(data.productid == products[x]._id){
-                    found = {
+                    let found = {
                         product: products[x],
                         currency: data.currency,
                         price: data.price
