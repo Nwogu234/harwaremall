@@ -8,7 +8,7 @@ const { compressSent, decompressSent } = require('../middlewares/compressdata')
 // send all uploaded product
 const findProducts = async (req, res) => {
     try{
-        const products = await Product.find({}, { name: 1, category: 1, tags: 1, brand: 1 })
+        const products = await Product.find({}, { img: 1, name: 1, category: 1, tags: 1, brand: 1 })
         if(products !== null){
 
             // Compress the data
