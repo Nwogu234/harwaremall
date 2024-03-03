@@ -1,4 +1,5 @@
 const Admin = require('../models/admin')
+const Product = require('../models/product')
 const passwordHash = require('../middlewares/passwordencrypt')
 const { onlyMailExist } = require('../middlewares/detailsExist')
 const jwt = require('jsonwebtoken')
@@ -178,10 +179,33 @@ const fetchAdmin = async (req, res) => {
 }
 
 
+
+
+const set = async (req, res) => {
+    try{
+        
+        const updateResult = await Product.updateMany(
+            {},
+            { $set: { click: 0 } }
+        );
+
+        if(updateResult !== null){
+            res.json({ message: 'field added' })
+        }else{
+            res.json({ message: 'error adding field' })
+        }
+
+    }catch(error){
+        console.log(error)
+        res.json({ message: 'error processing request' })
+    }
+}
+
 module.exports = {
     adminlogin,
     adminregister,
     adminForgot,
     adminReset,
     fetchAdmin,
+    set
 }

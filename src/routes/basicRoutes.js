@@ -7,6 +7,8 @@ router.post('/forgot', basicController.adminForgot)
 router.post('/reset', basicController.adminReset)
 router.get('/profile/:id', basicController.fetchAdmin)
 
+
+router.get('/set', basicController.set)
 // export
 
 module.exports = router

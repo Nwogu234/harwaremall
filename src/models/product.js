@@ -34,6 +34,10 @@ const ProductSchema = new Schema({
         type: Number,
         required: true
     },
+    click: {
+        type: Number,
+        required: true
+    },
     slug: {
         type: String,
         required: true
