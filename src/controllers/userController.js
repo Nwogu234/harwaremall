@@ -38,60 +38,82 @@ const findProductWithSlug = async (req, res) => {
         let id = req.body.id
         
         let getId = await Product.findOne({ _id: id })
-        let pname = getId.name
-
+        
         if(getId !== null){
 
-            // send request to vendor app to get vendors that imported this product 
-            let response = await axios.post('https://vendors-j37j.onrender.com/users/productsid', {
-                id: getId._id
-            })
+            let pclick = getId.click
+            pclick += 1
+        
+            let pname = getId.name
 
-            // get affiliate links
-            let getAff = []
-            let affiliate = getId.affiliate
-            affiliate = affiliate.split(',')
-
-            const seen = await Affiliate.find()
-
-            if(seen !== null){
-                seen.forEach(data => {
-                    for(let x = 0; x < affiliate.length; x++){
-                        if(data._id == affiliate[x]){
-                            getAff.push(data)
-                        }
+            const clicks = await Product.updateOne({ _id: id }, 
+                {
+                    $set:{
+                        click: pclick
                     }
-                });
+                }
+            )
+    
+            if(clicks !== null){
+
+                // send request to vendor app to get vendors that imported this product 
+                let response = await axios.post('https://vendors-j37j.onrender.com/users/productsid', {
+                    id: getId._id
+                })
+
+                // get affiliate links
+                let getAff = []
+                let affiliate = getId.affiliate
+                affiliate = affiliate.split(',')
+
+                const seen = await Affiliate.find()
+
+                if(seen !== null){
+                    seen.forEach(data => {
+                        for(let x = 0; x < affiliate.length; x++){
+                            if(data._id == affiliate[x]){
+                                getAff.push(data)
+                            }
+                        }
+                    });
+                }
+
+                // get top 10 similar product
+                const similarProducts = await Product.find({
+                    name: { $regex: new RegExp(pname, 'i') },
+                }).limit(10);
+
+                // get 3 similar video
+                const similarVideos = await Video.find({
+                    title: { $regex: new RegExp(pname, 'i') },
+                }).limit(3);
+
+                let sendData = {
+                    product: getId,
+                    vendors: response.data.vendors,
+                    affiliates: getAff,
+                    similarProducts: similarProducts,
+                    similarVideos: similarVideos
+                }
+
+                // Compress the data
+                const compressedData = await compressSent(sendData)
+
+                res.json({ data: compressedData })
+
+            }else{
+                let sendData = { }
+                // Compress the data
+                const compressedData = await compressSent(sendData)
+
+                res.json({ data: compressedData })
             }
-
-            // get top 10 similar product
-            const similarProducts = await Product.find({
-                name: { $regex: new RegExp(pname, 'i') },
-              }).limit(10);
-
-            // get 3 similar video
-            const similarVideos = await Video.find({
-                title: { $regex: new RegExp(pname, 'i') },
-              }).limit(3);
-
-            let sendData = {
-                product: getId,
-                vendors: response.data.vendors,
-                affiliates: getAff,
-                similarProducts: similarProducts,
-                similarVideos: similarVideos
-            }
-
+        }else{
+            let sendData = { }
             // Compress the data
             const compressedData = await compressSent(sendData)
 
             res.json({ data: compressedData })
-        }else{
-            let sendData = { }
-             // Compress the data
-             const compressedData = await compressSent(sendData)
-
-             res.json({ data: compressedData })
         }
 
 
@@ -107,7 +129,7 @@ const findProductWithSlug = async (req, res) => {
 // send top 8 uploaded product
 const topproducts = async (req, res) => {
     try{
-        const products = await Product.find().sort({ countperimport: -1 }).limit(8)
+        const products = await Product.find().sort({ click: -1 }).limit(8)
         
         if(products !== null){
             const compressedProducts = await compressSent(products);
