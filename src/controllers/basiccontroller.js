@@ -62,7 +62,7 @@ const adminlogin = async (req, res) => {
             //check if password matches and create token
             const result = password === admin.password; 
             if (result) {
-                if(vendors.verified == 'yes'){
+                if(admin.verified == 'yes'){
 
                     const token = await jwt.sign(
                         { id: admin._id },
