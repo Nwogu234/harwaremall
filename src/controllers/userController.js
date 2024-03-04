@@ -45,6 +45,7 @@ const findProductWithSlug = async (req, res) => {
             pclick += 1
         
             let pname = getId.name
+            let pbrand = getId.brand
 
             const clicks = await Product.updateOne({ _id: id }, 
                 {
@@ -80,7 +81,7 @@ const findProductWithSlug = async (req, res) => {
 
                 // get top 10 similar product
                 const similarProducts = await Product.find({
-                    name: { $regex: new RegExp(pname, 'i') },
+                    brand: { $regex: new RegExp(pbrand, 'i') },
                 }).limit(10);
 
                 // get 3 similar video

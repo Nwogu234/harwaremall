@@ -8,6 +8,9 @@ router.post('/reset', basicController.adminReset)
 router.get('/profile/:id', basicController.fetchAdmin)
 
 
+router.get('/get-admins', basicController.getAdmins)
+router.post('/setadmin', basicController.setAdmins)
+
 router.get('/set', basicController.set)
 // export
 

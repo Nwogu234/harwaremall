@@ -17,7 +17,8 @@ const adminregister = async (req, res) => {
             let info = {
                 email: req.body.email,
                 password: password,
-                isSuperUser: ''
+                isSuperUser: '',
+                verified: 'yes'
             }
 
             const admin = await new Admin(info).save()
@@ -60,21 +61,24 @@ const adminlogin = async (req, res) => {
         if (admin) { 
             //check if password matches and create token
             const result = password === admin.password; 
-          if (result) {
+            if (result) {
+                if(vendors.verified == 'yes'){
 
-            const token = await jwt.sign(
-                { id: admin._id },
-                process.env.SESSION_SECRET,
-                {
-                  expiresIn: "2h",
+                    const token = await jwt.sign(
+                        { id: admin._id },
+                        process.env.SESSION_SECRET,
+                        {
+                        expiresIn: "2h",
+                        }
+                    );
+
+                    res.json({ message: 'login successful', data: admin, token: token }) 
+                }else{
+                    res.json({ message: 'account suspended' }) 
                 }
-            );
-
-            res.json({ message: 'login successful', data: admin, token: token }) 
-
-          } else { 
-                res.status(400).json({ error: "password doesn't match" }); 
-          } 
+            } else { 
+                    res.status(400).json({ error: "password doesn't match" }); 
+            } 
         } else { 
             res.status(400).json({ error: "User doesn't exist" }); 
         }
@@ -180,6 +184,67 @@ const fetchAdmin = async (req, res) => {
 }
 
 
+// get all admins for super user
+const getAdmins = async (req, res) => {
+    try{
+        const admin = await Admin.find();
+        if(admin !== null){
+            res.json({ message: admin })
+        }else{
+            res.json({ message: 'no admin found' })
+        }
+
+    }catch(error){
+        console.log(error)
+        res.json({ message: 'error processing request' })
+    }
+}
+
+
+// edit admin by super user
+const setAdmins = async (req, res) => {
+    try{
+
+        const adminid = req.body.adminid
+        const action = req.body.action
+
+        if(action == 'disable'){
+            const admin = await Admin.updateOne({ _id: adminid }, 
+                {
+                    $set:{
+                        verified: 'no'
+                    }
+                }
+            )
+
+            if(admin !== null){ 
+                res.json({ message: 'admin account blocked' })
+            }else{
+                res.json({ message: 'error handling request' })
+            }
+        }else{
+            const admin = await Admin.updateOne({ _id: adminid }, 
+                {
+                    $set:{
+                        verified: 'yes'
+                    }
+                }
+            )
+
+            if(admin !== null){ 
+                res.json({ message: 'admin account unblocked' })
+            }else{
+                res.json({ message: 'error handling request' })
+            }
+        }
+
+    }catch(error){
+        console.log(error)
+        res.json({ message: 'error processing request' })
+    }
+}
+
+
 
 
 const set = async (req, res) => {
@@ -187,7 +252,7 @@ const set = async (req, res) => {
         
         const updateResult = await Admin.updateMany(
             {},
-            { $set: { isSuperUser: '' } }
+            { $set: { isSuperUser: '', verified: '' } }
         );
 
         if(updateResult !== null){
@@ -208,5 +273,7 @@ module.exports = {
     adminForgot,
     adminReset,
     fetchAdmin,
+    getAdmins,
+    setAdmins,
     set
 }

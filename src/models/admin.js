@@ -14,6 +14,10 @@ const adminSchema = new Schema({
         type: String,
         required: true
     },
+    verified: {
+        type: String,
+        required: true
+    },
 }, { timestamps: true })
 
 
