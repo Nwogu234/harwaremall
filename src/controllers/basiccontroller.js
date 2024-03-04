@@ -17,6 +17,7 @@ const adminregister = async (req, res) => {
             let info = {
                 email: req.body.email,
                 password: password,
+                isSuperUser: ''
             }
 
             const admin = await new Admin(info).save()
@@ -184,9 +185,9 @@ const fetchAdmin = async (req, res) => {
 const set = async (req, res) => {
     try{
         
-        const updateResult = await Product.updateMany(
+        const updateResult = await Admin.updateMany(
             {},
-            { $set: { click: 0 } }
+            { $set: { isSuperUser: '' } }
         );
 
         if(updateResult !== null){

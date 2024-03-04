@@ -10,6 +10,10 @@ const adminSchema = new Schema({
         type: String,
         required: true
     },
+    isSuperUser: {
+        type: String,
+        required: true
+    },
 }, { timestamps: true })
 
 
