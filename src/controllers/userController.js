@@ -46,6 +46,7 @@ const findProductWithSlug = async (req, res) => {
         
             let pname = getId.name
             let pbrand = getId.brand
+            let pcategory = getId.category
 
             const clicks = await Product.updateOne({ _id: id }, 
                 {
@@ -79,10 +80,13 @@ const findProductWithSlug = async (req, res) => {
                     });
                 }
 
-                // get top 10 similar product
                 const similarProducts = await Product.find({
-                    brand: { $regex: new RegExp(pbrand, 'i') },
+                    $or: [
+                        { brand: { $regex: new RegExp(pbrand, 'i') } },
+                        { category: { $regex: new RegExp(pcategory, 'i') } }
+                    ]
                 }).limit(10);
+
 
                 // get 3 similar video
                 const similarVideos = await Video.find({
