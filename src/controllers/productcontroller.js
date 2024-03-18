@@ -45,6 +45,7 @@ const createProduct = async (req, res) => {
                     click: 0,
                     slug: slug,
                     affiliate: req.body.affiliate,
+                    reviewvideo: req.body.reviewvideo,
                 };
 
                 const product = await new Product(info).save();
@@ -418,6 +419,7 @@ const editProduct = async (req, res) => {
                             brand: req.body.brand,
                             slug: slug,
                             affiliate: req.body.affiliate,
+                            reviewvideo: req.body.reviewvideo,
                         }
                     }
                 )
@@ -450,6 +452,7 @@ const editProduct = async (req, res) => {
                                     tags: req.body.tags,
                                     slug: slug,
                                     affiliate: req.body.affiliate,
+                                    reviewvideo: req.body.reviewvideo,
                                 }
                             }
                         )

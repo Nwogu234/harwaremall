@@ -250,9 +250,9 @@ const setAdmins = async (req, res) => {
 const set = async (req, res) => {
     try{
         
-        const updateResult = await Admin.updateMany(
+        const updateResult = await Product.updateMany(
             {},
-            { $set: { isSuperUser: '', verified: '' } }
+            { $set: { reviewvideo: '' } }
         );
 
         if(updateResult !== null){
