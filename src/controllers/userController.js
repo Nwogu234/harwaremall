@@ -78,7 +78,7 @@ const findProductWithSlug = async (req, res) => {
                     });
                 }
 
-                const similar = await Product.find()
+                const similar = await Product.find({ _id: { $ne: id } });
 
                 async function filterProductsSearch( keywords, data ){
                     const words = keywords.toLowerCase().split(" ");
