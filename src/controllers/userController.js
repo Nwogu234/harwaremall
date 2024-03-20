@@ -45,8 +45,6 @@ const findProductWithSlug = async (req, res) => {
             pclick += 1
         
             let pname = getId.name
-            let pbrand = getId.brand
-            let pcategory = getId.category
 
             const clicks = await Product.updateOne({ _id: id }, 
                 {
@@ -80,13 +78,36 @@ const findProductWithSlug = async (req, res) => {
                     });
                 }
 
-                const similarProducts = await Product.find({
-                    $or: [
-                        { brand: { $regex: new RegExp(pbrand, 'i') } },
-                        { category: { $regex: new RegExp(pcategory, 'i') } }
-                    ]
-                }).limit(10);
+                const similar = await Product.find()
 
+                async function filterProductsSearch( keywords, data ){
+                    const words = keywords.toLowerCase().split(" ");
+                    const top10 = [];
+                    let counter = 10;
+                    for (let i = words.length; i > 0 && counter > 0; i--) {
+                        for (const datum of data) {
+                            let count = 0;
+                            const name = datum.name.toLowerCase();
+                            for (const word of words) {
+                                if (name.includes(word)) count++;
+                            }
+                            if (count === i) {
+                                top10.push(datum);
+                                counter--;
+                            }
+                        }
+                    }
+                    return top10.slice(0, 10);
+                }
+
+                const similarProducts =  await filterProductsSearch(pname, similar)
+
+                // const similarProducts = await Product.find({
+                //     $or: [
+                //         { brand: { $regex: new RegExp(pbrand, 'i') } },
+                //         { category: { $regex: new RegExp(pcategory, 'i') } }
+                //     ]
+                // }).limit(10);
 
                 // get 3 similar video
                 const similarVideos = await Video.find({
