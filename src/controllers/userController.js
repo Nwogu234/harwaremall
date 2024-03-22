@@ -1,4 +1,5 @@
 const Product = require('../models/product')
+const Category = require('../models/category')
 const Video = require('../models/advideo')
 const Affiliate = require('../models/affiliate')
 const axios = require('axios')
@@ -45,6 +46,9 @@ const findProductWithSlug = async (req, res) => {
             pclick += 1
         
             let pname = getId.name
+            let pcategory = getId.category
+
+            const rvideo = await Category.find({ title: pcategory });
 
             const clicks = await Product.updateOne({ _id: id }, 
                 {
@@ -119,7 +123,8 @@ const findProductWithSlug = async (req, res) => {
                     vendors: response.data.vendors,
                     affiliates: getAff,
                     similarProducts: similarProducts,
-                    similarVideos: similarVideos
+                    similarVideos: similarVideos,
+                    rcommendedvideo: rvideo
                 }
 
                 // Compress the data
