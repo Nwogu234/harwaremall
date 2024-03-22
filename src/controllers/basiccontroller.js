@@ -1,5 +1,5 @@
 const Admin = require('../models/admin')
-const Product = require('../models/product')
+const Category = require('../models/category')
 const passwordHash = require('../middlewares/passwordencrypt')
 const { onlyMailExist } = require('../middlewares/detailsExist')
 const jwt = require('jsonwebtoken')
@@ -250,9 +250,9 @@ const setAdmins = async (req, res) => {
 const set = async (req, res) => {
     try{
         
-        const updateResult = await Product.updateMany(
+        const updateResult = await Category.updateMany(
             {},
-            { $set: { reviewvideo: '' } }
+            { $set: { videos: '' } }
         );
 
         if(updateResult !== null){

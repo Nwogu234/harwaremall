@@ -158,7 +158,8 @@ const createCategory = async (req, res) => {
         }
         
         let info = {
-            title: req.body.title
+            title: req.body.title,
+            videos: req.body.videos
         }
 
         const category = await new Category(info).save()
@@ -363,6 +364,30 @@ const deleteAff = async (req, res) => {
 }
 
 
+// delete affiliate
+const deleteCategory = async (req, res) => {
+    try{
+        if(req.body.admin_email != req.admin.email){
+            return res.json({ message: 'invalid or expired token' })
+        }
+
+        const catid = req.body.category_id
+
+        const result = await Category.findByIdAndDelete(catid)
+
+        if(result !== null){
+            res.json({ message: 'category deleted' })
+        }else{
+            res.json({ message: 'error deleting category' })
+        }  
+
+    }catch (error) {
+        console.log(error)
+        res.json({ message: 'error processing request' })
+    }
+}
+
+
 
 
 // delete video
@@ -482,6 +507,34 @@ const editProduct = async (req, res) => {
 
 
 
+// edit category
+const editCategory = async (req, res) => {
+    try{
+        if(req.body.admin_email != req.admin.email){
+            return res.json({ message: 'invalid or expired token' })
+        }
+
+        const category = await Category.updateOne({ _id: req.body.categoryid }, 
+            {
+                $set:{
+                    videos: req.body.videos
+                }
+            }
+        )
+
+        if(category !== null){
+            res.json({ message: 'category updated' })
+        }else{
+            res.json({ message: 'error updating category' })
+        }
+
+    }catch (error) {
+        console.log(error)
+        res.json({ message: 'error processing request' })
+    }
+}
+
+
 
 
 // deleting products
@@ -513,6 +566,7 @@ module.exports = {
     createProduct,
     createVideo,
     editProduct,
+    editCategory,
     createAffiliate,
     viewAffiliate,
     viewVideo,
@@ -520,6 +574,7 @@ module.exports = {
     deleteAff,
     deleteVideo,
     deleteProduct,
+    deleteCategory,
     insertHero,
     getHero,
     createBrand,

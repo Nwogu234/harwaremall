@@ -12,12 +12,14 @@ router.post('/addaffiliate', auth, productcontroller.createAffiliate)
 router.post('/addbrand', auth, productcontroller.createBrand)
 router.post('/addcategory', auth, productcontroller.createCategory)
 router.post('/edit', auth, upload.single("img"), productcontroller.editProduct)
+router.post('/editcategory', auth, productcontroller.editCategory)
 router.post('/delete', auth, productcontroller.deleteProduct)
 router.post('/inserthero', auth, productcontroller.insertHero)
 
 
 router.post('/deleteaff', auth, productcontroller.deleteAff)
 router.post('/deletevideo', auth, productcontroller.deleteVideo)
+router.post('/deletecategory', auth, productcontroller.deleteCategory)
 
 
 

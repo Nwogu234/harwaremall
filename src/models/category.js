@@ -6,6 +6,10 @@ const CategorySchema = new Schema({
         type: String,
         required: true
     },
+    videos: {
+        type: String,
+        required: true
+    },
 }, { timestamps: true })
 
 
