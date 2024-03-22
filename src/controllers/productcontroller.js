@@ -230,7 +230,7 @@ const getHero = async (req, res) => {
 const getBrand = async (req, res) => {
     try{
 
-        let response = await Brand.find().sort({ createdAt: -1 }).limit(1)
+        let response = await Brand.find().sort({ createdAt: -1 })
         if(response !== null){
             res.json({ title: response })
         }
